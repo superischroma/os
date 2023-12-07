@@ -1,0 +1,10 @@
+eax: type of syscall
+[0] exit
+    ebx: exit code
+[1] open
+[2] close
+[3] read
+[4] write
+    ebx: file descriptor
+    ecx: pointer to bytes to write
+    edx: number of bytes to write

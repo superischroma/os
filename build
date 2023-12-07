@@ -1,0 +1,26 @@
+mkdir -p target
+mkdir -p target/obj
+../opt/cross/bin/i686-elf-as src/boot.s -o target/obj/boot.o
+../opt/cross/bin/i686-elf-as src/gdt.s -o target/obj/gdt_s.o
+../opt/cross/bin/i686-elf-as src/idt.s -o target/obj/idt_s.o
+../opt/cross/bin/i686-elf-as src/isrs.s -o target/obj/isrs_s.o
+../opt/cross/bin/i686-elf-as src/irq.s -o target/obj/irq_s.o
+../opt/cross/bin/i686-elf-gcc -c src/kernel.c -o target/obj/kernel.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+../opt/cross/bin/i686-elf-gcc -c src/gdt.c -o target/obj/gdt.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+../opt/cross/bin/i686-elf-gcc -c src/idt.c -o target/obj/idt.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+../opt/cross/bin/i686-elf-gcc -c src/isrs.c -o target/obj/isrs.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+../opt/cross/bin/i686-elf-gcc -c src/irq.c -o target/obj/irq.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+../opt/cross/bin/i686-elf-gcc -c src/keyboard.c -o target/obj/keyboard.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+../opt/cross/bin/i686-elf-gcc -c src/mem.c -o target/obj/mem.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+../opt/cross/bin/i686-elf-gcc -c src/string.c -o target/obj/string.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+../opt/cross/bin/i686-elf-gcc -c src/terminal.c -o target/obj/terminal.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+../opt/cross/bin/i686-elf-gcc -c src/io.c -o target/obj/io.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+../opt/cross/bin/i686-elf-gcc -c src/rand.c -o target/obj/rand.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+../opt/cross/bin/i686-elf-gcc -c src/time.c -o target/obj/time.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+../opt/cross/bin/i686-elf-gcc -c src/fs.c -o target/obj/fs.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+../opt/cross/bin/i686-elf-gcc -c src/ata.c -o target/obj/ata.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+../opt/cross/bin/i686-elf-gcc -c src/elf.c -o target/obj/elf.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+../opt/cross/bin/i686-elf-gcc -T linker.ld -o target/os.bin -ffreestanding -O2 -nostdlib target/obj/gdt_s.o target/obj/idt_s.o target/obj/isrs_s.o target/obj/irq_s.o target/obj/boot.o target/obj/mem.o target/obj/gdt.o target/obj/idt.o target/obj/isrs.o target/obj/irq.o target/obj/keyboard.o target/obj/string.o target/obj/terminal.o target/obj/io.o target/obj/rand.o target/obj/time.o target/obj/fs.o target/obj/ata.o target/obj/elf.o target/obj/kernel.o -lgcc
+cp target/os.bin isodir/boot/os.bin
+cp grub.cfg isodir/boot/grub/grub.cfg
+sudo grub-mkrescue -o target/os.iso isodir
